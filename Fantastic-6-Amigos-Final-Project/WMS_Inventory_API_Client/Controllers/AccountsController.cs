@@ -71,7 +71,12 @@ namespace WMS_Inventory_API_Client.Controllers
                 return NotFound();
             }
             var resultPut = await client.PutAsync<Account>(requestUri + account.Id.ToString(), account, new JsonMediaTypeFormatter());
-            return RedirectToAction(nameof(Index));
+
+            TempData["AccountId"] = account.Id;
+
+            string tmp = nameof(Details) + '/' + account.Id.ToString();
+
+            return RedirectToAction(nameof(Details), new { ID = account.Id });
         }
         // GET: Account/Delete/5
         public async Task<IActionResult> Delete(int id)
