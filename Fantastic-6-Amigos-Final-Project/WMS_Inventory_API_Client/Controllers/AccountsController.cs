@@ -74,8 +74,6 @@ namespace WMS_Inventory_API_Client.Controllers
 
             TempData["AccountId"] = account.Id;
 
-            string tmp = nameof(Details) + '/' + account.Id.ToString();
-
             return RedirectToAction(nameof(Details), new { ID = account.Id });
         }
         // GET: Account/Delete/5
