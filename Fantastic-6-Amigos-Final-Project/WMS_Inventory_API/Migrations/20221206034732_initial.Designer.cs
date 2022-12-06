@@ -12,8 +12,8 @@ using WMS_Inventory_API;
 namespace WMS_Inventory_API.Migrations
 {
     [DbContext(typeof(InventoryContext))]
-    [Migration("20221201164525_NewMigration")]
-    partial class NewMigration
+    [Migration("20221206034732_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -89,12 +89,17 @@ namespace WMS_Inventory_API.Migrations
                     b.Property<int?>("StorageLocationId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("StorageLocationId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StorageLocationId");
+
+                    b.HasIndex("StorageLocationId1");
 
                     b.ToTable("Container");
 
@@ -140,6 +145,9 @@ namespace WMS_Inventory_API.Migrations
                     b.Property<int?>("ContainerId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ContainerId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -152,6 +160,8 @@ namespace WMS_Inventory_API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ContainerId");
+
+                    b.HasIndex("ContainerId1");
 
                     b.HasIndex("StorageLocationId");
 
@@ -276,6 +286,9 @@ namespace WMS_Inventory_API.Migrations
                     b.Property<int?>("AccountId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("AccountId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Address1")
                         .HasColumnType("nvarchar(max)");
 
@@ -303,6 +316,8 @@ namespace WMS_Inventory_API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("AccountId1");
 
                     b.ToTable("StorageLocation");
 
@@ -337,18 +352,28 @@ namespace WMS_Inventory_API.Migrations
 
             modelBuilder.Entity("WMS_Inventory_API.Models.Container", b =>
                 {
+                    b.HasOne("WMS_Inventory_API.Models.Container", null)
+                        .WithMany()
+                        .HasForeignKey("StorageLocationId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
+
                     b.HasOne("WMS_Inventory_API.Models.StorageLocation", "StorageLocation")
                         .WithMany("Container")
-                        .HasForeignKey("StorageLocationId");
+                        .HasForeignKey("StorageLocationId1");
 
                     b.Navigation("StorageLocation");
                 });
 
             modelBuilder.Entity("WMS_Inventory_API.Models.Content", b =>
                 {
+                    b.HasOne("WMS_Inventory_API.Models.Content", null)
+                        .WithMany()
+                        .HasForeignKey("ContainerId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
+
                     b.HasOne("WMS_Inventory_API.Models.Container", "Container")
-                        .WithMany("Content")
-                        .HasForeignKey("ContainerId");
+                        .WithMany("StorageLocations")
+                        .HasForeignKey("ContainerId1");
 
                     b.HasOne("WMS_Inventory_API.Models.StorageLocation", "StorageLocation")
                         .WithMany()
@@ -361,9 +386,14 @@ namespace WMS_Inventory_API.Migrations
 
             modelBuilder.Entity("WMS_Inventory_API.Models.StorageLocation", b =>
                 {
+                    b.HasOne("WMS_Inventory_API.Models.StorageLocation", null)
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
+
                     b.HasOne("WMS_Inventory_API.Models.Account", null)
                         .WithMany("StorageLocation")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("AccountId1");
                 });
 
             modelBuilder.Entity("WMS_Inventory_API.Models.Account", b =>
@@ -373,7 +403,7 @@ namespace WMS_Inventory_API.Migrations
 
             modelBuilder.Entity("WMS_Inventory_API.Models.Container", b =>
                 {
-                    b.Navigation("Content");
+                    b.Navigation("StorageLocations");
                 });
 
             modelBuilder.Entity("WMS_Inventory_API.Models.StorageLocation", b =>

@@ -25,7 +25,7 @@ namespace WMS_Inventory_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Container>>> GetContainer()
         {
-            return await _context.Container.Include(s => s.StorageLocation).Include(c => c.Content).ToListAsync();
+            return await _context.Container.Include(s => s.StorageLocation).Include(c => c.StorageLocation).ToListAsync();
         }
 
         // GET: api/Containers/Account
@@ -33,14 +33,14 @@ namespace WMS_Inventory_API.Controllers
         public async Task<ActionResult<IEnumerable<Container>>> Account(int acct)
         {
             //return await _context.Container.Include(s => s.StorageLocation).Include(c => c.Content).ToListAsync();
-            return await _context.Container.Include(s => s.StorageLocation).Include(c => c.Content).Where(a => a.StorageLocation.AccountId == acct).ToListAsync();
+            return await _context.Container.Include(s => s.StorageLocation).Include(c => c.StorageLocation).Where(a => a.StorageLocation.AccountId == acct).ToListAsync();
         }
 
         // GET: api/Containers/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Container>> GetContainer(int id)
         {
-            var container = await _context.Container.Include(s => s.StorageLocation).Include(c => c.Content).FirstOrDefaultAsync(i => i.Id == id);
+            var container = await _context.Container.Include(s => s.StorageLocation).Include(c => c.StorageLocation).FirstOrDefaultAsync(i => i.Id == id);
 
             if (container == null)
             {

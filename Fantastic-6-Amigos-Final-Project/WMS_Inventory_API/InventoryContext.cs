@@ -1,6 +1,9 @@
 ﻿using WMS_Inventory_API.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
+using System.Reflection.Emit;
+using Microsoft.Extensions.Hosting;
+using System.Reflection.Metadata;
 
 namespace WMS_Inventory_API
 {
@@ -24,6 +27,7 @@ namespace WMS_Inventory_API
         {
             model.Entity<Account>().HasData(
                     new Account() { Id = 1, Name = "Charles Baker", Address1 = "5814 N 17th St", Address2 = "", City = "Tampa", State = "FL", ZipCode = 33610, Email = "charles.baker@gmail.com", Password = "password"});
+
 
             model.Entity<StorageLocation>().HasData(
                     new StorageLocation() { Id = 1, LocationName = "Home Shop", Address1 = "5814 N 17th St", Address2 = "", City = "Tampa", State = "FL", ZipCode = 33610, Longitude = 27.995778, Latitude = -82.440322, AccountId = 1 },
@@ -51,6 +55,28 @@ namespace WMS_Inventory_API
                 new Content() { Id = 13, Quantity = 1, Description = "Skilsaw 5 1/2 in circular saw", ContainerId = 4 },
                 new Content() { Id = 14, Quantity = 3, Description = "Ryobi One+ tools - 1/2 in drill, finish sander, brad nailer", ContainerId = 4 },
                 new Content() { Id = 15, Quantity = 1, Description = "Milwaukee 7 1/4 in circular saw", ContainerId = 4 });
+
+
+
+            model.Entity<Container>()
+            .HasOne<Container>()
+            .WithMany()
+            .HasForeignKey(p => p.StorageLocationId)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
+            model.Entity<Content>()
+            .HasOne<Content>()
+            .WithMany()
+            .HasForeignKey(p => p.ContainerId)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
+            model.Entity<StorageLocation>()
+            .HasOne<StorageLocation>()
+            .WithMany()
+            .HasForeignKey(p => p.AccountId)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
+
 
             base.OnModelCreating(model);
         }
